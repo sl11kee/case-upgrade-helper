@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Советчик апгрейда Case Battle</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+    input { width: 100%; margin: 5px 0; padding: 8px; font-size: 16px; }
+    button { padding: 10px; width: 100%; font-size: 16px; }
+    #result { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Case Battle — советчик апгрейда</h2>
+  <label>💰 Стоимость предмета (руб):</label>
+  <input id="value" type="number" placeholder="например, 100">
+
+  <label>🎯 Шанс апгрейда (%):</label>
+  <input id="chance" type="number" placeholder="например, 65">
+
+  <button onclick="recommend()">Рассчитать ставку</button>
+
+  <div id="result"></div>
+
+  <script>
+    function recommend() {
+      const value = parseFloat(document.getElementById("value").value);
+      const chance = parseFloat(document.getElementById("chance").value);
+
+      if (isNaN(value) || isNaN(chance) || chance <= 0 || chance >= 100) {
+        document.getElementById("result").innerText = "Введите корректные данные.";
+        return;
+      }
+
+      const p = chance / 100;
+      const expectedROI = p * (1 / p) + (1 - p) * 0; // = 1
+      let stakeFraction;
+
+      if (p > 0.6) stakeFraction = 0.25;
+      else if (p > 0.45) stakeFraction = 0.15;
+      else stakeFraction = 0.07;
+
+      const recommended = (value * stakeFraction).toFixed(2);
+
+      document.getElementById("result").innerText =
+        `📊 Рекомендуемая ставка: ${recommended} руб (${(stakeFraction * 100).toFixed(1)}% от суммы).\n🔎 Предполагаемый ROI: ${expectedROI.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
